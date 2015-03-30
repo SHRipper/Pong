@@ -46,12 +46,18 @@ Partial Class MainForm
         Me.lblSpielzeit = New System.Windows.Forms.Label()
         Me.lblStop = New System.Windows.Forms.Label()
         Me.lblSpielstand = New System.Windows.Forms.Label()
+        Me.EinstellungenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SpielartToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FreiesSpielToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SpielBis3ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SpielBis5ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SpielBis10ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip
         '
-        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SpielToolStripMenuItem, Me.HilfeToolStripMenuItem})
+        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SpielToolStripMenuItem, Me.EinstellungenToolStripMenuItem, Me.HilfeToolStripMenuItem})
         Me.MenuStrip.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip.Name = "MenuStrip"
         Me.MenuStrip.Size = New System.Drawing.Size(1004, 24)
@@ -68,30 +74,30 @@ Partial Class MainForm
         'StartToolStripMenuItem
         '
         Me.StartToolStripMenuItem.Name = "StartToolStripMenuItem"
-        Me.StartToolStripMenuItem.Size = New System.Drawing.Size(134, 22)
+        Me.StartToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.StartToolStripMenuItem.Text = "Start"
         '
         'PauseToolStripMenuItem
         '
         Me.PauseToolStripMenuItem.Name = "PauseToolStripMenuItem"
-        Me.PauseToolStripMenuItem.Size = New System.Drawing.Size(134, 22)
+        Me.PauseToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.PauseToolStripMenuItem.Text = "Pause (Esc)"
         '
         'ResetToolStripMenuItem
         '
         Me.ResetToolStripMenuItem.Name = "ResetToolStripMenuItem"
-        Me.ResetToolStripMenuItem.Size = New System.Drawing.Size(134, 22)
+        Me.ResetToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ResetToolStripMenuItem.Text = "Reset"
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(131, 6)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(149, 6)
         '
         'SchließenToolStripMenuItem
         '
         Me.SchließenToolStripMenuItem.Name = "SchließenToolStripMenuItem"
-        Me.SchließenToolStripMenuItem.Size = New System.Drawing.Size(134, 22)
+        Me.SchließenToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.SchließenToolStripMenuItem.Text = "Schließen..."
         '
         'HilfeToolStripMenuItem
@@ -197,6 +203,46 @@ Partial Class MainForm
         Me.lblSpielstand.TabIndex = 4
         Me.lblSpielstand.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'EinstellungenToolStripMenuItem
+        '
+        Me.EinstellungenToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SpielartToolStripMenuItem})
+        Me.EinstellungenToolStripMenuItem.Name = "EinstellungenToolStripMenuItem"
+        Me.EinstellungenToolStripMenuItem.Size = New System.Drawing.Size(90, 20)
+        Me.EinstellungenToolStripMenuItem.Text = "Einstellungen"
+        '
+        'SpielartToolStripMenuItem
+        '
+        Me.SpielartToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FreiesSpielToolStripMenuItem, Me.SpielBis3ToolStripMenuItem, Me.SpielBis5ToolStripMenuItem, Me.SpielBis10ToolStripMenuItem})
+        Me.SpielartToolStripMenuItem.Name = "SpielartToolStripMenuItem"
+        Me.SpielartToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.SpielartToolStripMenuItem.Text = "Spielart"
+        '
+        'FreiesSpielToolStripMenuItem
+        '
+        Me.FreiesSpielToolStripMenuItem.Checked = True
+        Me.FreiesSpielToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.FreiesSpielToolStripMenuItem.Name = "FreiesSpielToolStripMenuItem"
+        Me.FreiesSpielToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.FreiesSpielToolStripMenuItem.Text = "freies Spiel"
+        '
+        'SpielBis3ToolStripMenuItem
+        '
+        Me.SpielBis3ToolStripMenuItem.Name = "SpielBis3ToolStripMenuItem"
+        Me.SpielBis3ToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.SpielBis3ToolStripMenuItem.Text = "Spiel bis 3"
+        '
+        'SpielBis5ToolStripMenuItem
+        '
+        Me.SpielBis5ToolStripMenuItem.Name = "SpielBis5ToolStripMenuItem"
+        Me.SpielBis5ToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.SpielBis5ToolStripMenuItem.Text = "Spiel bis 5"
+        '
+        'SpielBis10ToolStripMenuItem
+        '
+        Me.SpielBis10ToolStripMenuItem.Name = "SpielBis10ToolStripMenuItem"
+        Me.SpielBis10ToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.SpielBis10ToolStripMenuItem.Text = "Spiel bis 10"
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -240,5 +286,11 @@ Partial Class MainForm
     Friend WithEvents PauseToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CreditsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents lblSpielstand As System.Windows.Forms.Label
+    Friend WithEvents EinstellungenToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents SpielartToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents FreiesSpielToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents SpielBis3ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents SpielBis5ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents SpielBis10ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

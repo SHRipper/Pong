@@ -29,6 +29,7 @@ Public Class MainForm
 
     'Sonstige
     Dim ClickCounterPause As Integer
+    Dim Startklicks As Integer
     Dim Spiel_läuft As Boolean
     Dim Reset As Boolean
 
@@ -77,6 +78,15 @@ Public Class MainForm
         computerBumper.Enabled = False
         gameBall.Enabled = False
 
+        'Spielarten
+        SpielBis3ToolStripMenuItem.CheckOnClick = True
+        SpielBis5ToolStripMenuItem.CheckOnClick = True
+        SpielBis10ToolStripMenuItem.CheckOnClick = True
+        FreiesSpielToolStripMenuItem.CheckOnClick = True
+        SpielBis3ToolStripMenuItem.Checked = False
+        SpielBis10ToolStripMenuItem.Checked = False
+        SpielBis5ToolStripMenuItem.Checked = False
+        FreiesSpielToolStripMenuItem.Checked = True
 
 
     End Sub
@@ -118,31 +128,30 @@ Public Class MainForm
     Private Sub StartToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles StartToolStripMenuItem.Click
         'Beim Klick auf Start
 
+        Startklicks += 1
+
         'Spiel weiterlaufen lassen falls es pausiert ist
         If ClickCounterPause = 1 Then
             lblStop.Hide()
             Spiel_starten(True)
             ClickCounterPause = 0
-        Else
+        ElseIf Not Spiel_läuft Then
 
             'Prüfen ob das Spiel schon gestartet ist 
-            If Not Spiel_läuft Then
+            Reset = False
 
-                Reset = False
+            Minuten = 0
+            Sekunden = 0
 
-                Minuten = 0
-                Sekunden = 0
+            'Geschwindigkeit des Balles in X und Y-Richtung zufällig zwischen 5 und 10 festlegen
+            vxBall = Math.Round(Rnd() * 5 + 5)
+            vyBall = Math.Round(Rnd() * 5 + 5)
 
-                'Geschwindigkeit des Balles in X und Y-Richtung zufällig zwischen 5 und 10 festlegen
-                vxBall = Math.Round(Rnd() * 5 + 5)
-                vyBall = Math.Round(Rnd() * 5 + 5)
+            'Objekte auf Standartposition setzen
+            setStandartPosition()
 
-                'Objekte auf Standartposition setzen
-                setStandartPosition()
-
-                'Timer starten
-                Spiel_starten(True)
-            End If
+            'Timer starten
+            Spiel_starten(True)
         End If
 
     End Sub
@@ -164,6 +173,9 @@ Public Class MainForm
 
         'Spielzeit zurücksetzen
         lblSpielzeit.Text = "Spielzeit: 00 : 00"
+
+        'Text des Start Buttons zurücksetzen
+        StartToolStripMenuItem.Text = "Start"
 
         'Mögliches Pausieren des Spiels rückgängig machen
         ClickCounterPause = 0
@@ -235,8 +247,8 @@ Public Class MainForm
 
     Private Sub AnleitungToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AnleitungToolStripMenuItem.Click
         'Beim Klick auf "Wie wird gespielt" Hilfefenster öffnen
-        Hilfefenster.Show()
-        Hilfefenster.Focus()
+        Anleitung.Show()
+        Anleitung.Focus()
     End Sub
 
     Private Sub CreditsToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles CreditsToolStripMenuItem.Click
@@ -254,6 +266,52 @@ Public Class MainForm
             ClickCounterPause = 1
         End If
 
+    End Sub
+
+    Private Sub EinstellungenToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles EinstellungenToolStripMenuItem.Click
+        'Beim Klick auf den Einstellungen-Reiter
+
+        'Verhindert, dass beim Reset pausiert wird
+        If Not Reset Then
+            'Spiel pausieren
+            Spiel_starten(False)
+            lblStop.Show()
+            ClickCounterPause = 1
+        End If
+    End Sub
+
+    Private Sub FreiesSpielToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles FreiesSpielToolStripMenuItem.Click
+        SpielBis3ToolStripMenuItem.Checked = False
+        SpielBis5ToolStripMenuItem.Checked = False
+        SpielBis10ToolStripMenuItem.Checked = False
+        FreiesSpielToolStripMenuItem.Checked = True
+    End Sub
+
+    Private Sub SpielBis3ToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SpielBis3ToolStripMenuItem.Click
+        SpielBis3ToolStripMenuItem.Checked = True
+        SpielBis5ToolStripMenuItem.Checked = False
+        SpielBis10ToolStripMenuItem.Checked = False
+        FreiesSpielToolStripMenuItem.Checked = False
+
+        ResetToolStripMenuItem.PerformClick()
+    End Sub
+
+    Private Sub SpielBis5ToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SpielBis5ToolStripMenuItem.Click
+        SpielBis3ToolStripMenuItem.Checked = False
+        SpielBis5ToolStripMenuItem.Checked = True
+        SpielBis10ToolStripMenuItem.Checked = False
+        FreiesSpielToolStripMenuItem.Checked = False
+
+        ResetToolStripMenuItem.PerformClick()
+    End Sub
+
+    Private Sub SpielBis10ToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SpielBis10ToolStripMenuItem.Click
+        SpielBis3ToolStripMenuItem.Checked = False
+        SpielBis5ToolStripMenuItem.Checked = False
+        SpielBis10ToolStripMenuItem.Checked = True
+        FreiesSpielToolStripMenuItem.Checked = False
+
+        ResetToolStripMenuItem.PerformClick()
     End Sub
 
     Private Sub playerTimer_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles playerTimer.Tick
@@ -314,22 +372,6 @@ Public Class MainForm
             vyBall = -vyBall 'Y-Geschwindigkeit invertieren
         End If
 
-        'Prüfen ob der Ball an den rechten Spielfeldrand stößt
-        If gameBall.Right >= breiteSpielfeld Then
-            'Spieler gewinnt
-            Spiel_starten(False)
-            Spielerpunkte += 1
-            MessageBox.Show("Du hast Gewonnen!!!", "Super!", MessageBoxButtons.OK, MessageBoxIcon.None)
-        End If
-
-        'Prüfen ob der Ball an den linken Spielfeldrand stößt
-        If gameBall.Left <= 0 Then
-            'Spieler verliert
-            Spiel_starten(False)
-            Computerpunkte += 1
-            MessageBox.Show("Leider verloren! Versuchs doch gleich nochmal :)", "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
-        End If
-
         'Spielstand Label verstecken, wenn der Ball es berührt
         If gameBall.Bounds.IntersectsWith(lblSpielstand.Bounds) Then
             lblSpielstand.Visible = False
@@ -344,8 +386,65 @@ Public Class MainForm
             lblSpielzeit.Visible = True
         End If
 
+        'Prüfen ob der Ball an den rechten Spielfeldrand stößt
+        If gameBall.Right >= breiteSpielfeld Then
+            'Spieler gewinnt
+            Spiel_starten(False)
+            Spielerpunkte += 1
+            StartToolStripMenuItem.Text = "Weiter..."
+            MessageBox.Show("Du erhälst einen Punkt!", "Super!", MessageBoxButtons.OK, MessageBoxIcon.None)
+        End If
+
+        'Prüfen ob der Ball an den linken Spielfeldrand stößt
+        If gameBall.Left <= 0 Then
+            'Spieler verliert
+            Spiel_starten(False)
+            Computerpunkte += 1
+            StartToolStripMenuItem.Text = "Weiter..."
+            MessageBox.Show("Der Computer erhält einen Punkt!", "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
+        End If
+
         'Spielstand anzeigen
         lblSpielstand.Text = Spielerpunkte & " : " & Computerpunkte
+
+        Spielergebnis_prüfen()
+
+    End Sub
+
+    Private Sub Spielergebnis_prüfen()
+
+        If SpielBis3ToolStripMenuItem.Checked Then
+            'Spiel geht bis 3
+            If Computerpunkte = 3 Then
+                MessageBox.Show("Leider verloren! Versuchs doch gleich nochmal :)", "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
+                ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
+            ElseIf Spielerpunkte = 3 Then
+                MessageBox.Show("Du hast gewonnen!!!", "Super!", MessageBoxButtons.OK, MessageBoxIcon.None)
+                ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
+            End If
+        End If
+
+        If SpielBis5ToolStripMenuItem.Checked Then
+            'Spiel geht bis 5
+            If Computerpunkte = 5 Then
+                MessageBox.Show("Leider verloren! Versuchs doch gleich nochmal :)", "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
+                ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
+            ElseIf Spielerpunkte = 5 Then
+                MessageBox.Show("Du hast gewonnen!!!", "Super!", MessageBoxButtons.OK, MessageBoxIcon.None)
+                ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
+            End If
+        End If
+
+        If SpielBis10ToolStripMenuItem.Checked Then
+            'Spiel geht bis 10
+            If Computerpunkte = 10 Then
+                MessageBox.Show("Leider verloren! Versuchs doch gleich nochmal :)", "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
+                ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
+            ElseIf Spielerpunkte = 10 Then
+                MessageBox.Show("Du hast gewonnen!!!", "Super!", MessageBoxButtons.OK, MessageBoxIcon.None)
+                ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
+            End If
+        End If
 
     End Sub
 

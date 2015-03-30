@@ -30,3 +30,15 @@ C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Pong\Pong\obj\x86\Debug\Pon
 C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Pong\Pong\obj\x86\Debug\Pong.vbproj.GenerateResource.Cache
 C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Pong\Pong\obj\x86\Debug\Pong.Credits.resources
 C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Pong\Pong\obj\x86\Debug\Pong.Welcome.resources
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.exe
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.xml
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.pdb
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\bin\Debug\Pong.exe
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\bin\Debug\Pong.pdb
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\bin\Debug\Pong.xml
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.Credits.resources
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.MainForm.resources
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.Resources.resources
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.Welcome.resources
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.vbproj.GenerateResource.Cache
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.Anleitung.resources
