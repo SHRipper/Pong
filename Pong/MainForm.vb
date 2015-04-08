@@ -1,5 +1,6 @@
 ﻿Imports Microsoft.VisualBasic.PowerPacks
 Public Class MainForm
+
     'Objekte
     Dim player As New RectangleShape
     Dim computer As New RectangleShape
@@ -27,9 +28,11 @@ Public Class MainForm
     Dim Computerpunkte As Integer
     Dim Spielerpunkte As Integer
 
-    'Sonstige
+    'Klickvariablen
     Dim ClickCounterPause As Integer
     Dim Startklicks As Integer
+
+    'Hilfsvariablen
     Dim Spiel_läuft As Boolean
     Dim Reset As Boolean
 
@@ -45,17 +48,16 @@ Public Class MainForm
         playerTimer.Interval = 1 '1 Millisekunde
         ballTimer.Interval = 1 '1 Millisekunde
         computerTimer.Interval = 1 '1 Millisekunde
-        velocityTimer.Interval = 10000 '10 Sekunden
         SpielzeitTimer.Interval = 1000 '1 Sekunde
 
-        'Timer stoppen
+        'Alle Timer stoppen
         Spiel_starten(False)
 
-        'Spielfeldabmessungen 
+        'Spielfeldabmessungen festlegen
         höheSpielfeld = Me.Height - 40
         breiteSpielfeld = Me.Width - 20
 
-        'Punkte für die Standart Position der Objekte
+        'Punkte für die Standart Position der Objekte festlegen
         standartBallLocation = New Point(breiteSpielfeld / 2, höheSpielfeld / 2)
         standartPlayerLocation = New Point(20, höheSpielfeld / 2 - playerBumper.Height / 2)
         standartComputerLocation = New Point(breiteSpielfeld - 25, höheSpielfeld / 2 - computerBumper.Height / 2)
@@ -78,11 +80,13 @@ Public Class MainForm
         computerBumper.Enabled = False
         gameBall.Enabled = False
 
-        'Spielarten
+        'Spielarten konfigurieren
         SpielBis3ToolStripMenuItem.CheckOnClick = True
         SpielBis5ToolStripMenuItem.CheckOnClick = True
         SpielBis10ToolStripMenuItem.CheckOnClick = True
         FreiesSpielToolStripMenuItem.CheckOnClick = True
+
+        'Spielarten auf Freies Spiel voreinstellen
         SpielBis3ToolStripMenuItem.Checked = False
         SpielBis10ToolStripMenuItem.Checked = False
         SpielBis5ToolStripMenuItem.Checked = False
@@ -107,9 +111,9 @@ Public Class MainForm
             'alle Timer Starten
             playerTimer.Start()
             computerTimer.Start()
-            velocityTimer.Start()
             ballTimer.Start()
             SpielzeitTimer.Start()
+
             Spiel_läuft = True
 
         ElseIf Start = False Then
@@ -117,9 +121,9 @@ Public Class MainForm
             'alle Timer stoppen
             playerTimer.Stop()
             computerTimer.Stop()
-            velocityTimer.Stop()
             ballTimer.Stop()
             SpielzeitTimer.Stop()
+
             Spiel_läuft = False
 
         End If
@@ -135,17 +139,20 @@ Public Class MainForm
             lblStop.Hide()
             Spiel_starten(True)
             ClickCounterPause = 0
-        ElseIf Not Spiel_läuft Then
+        Else
 
-            'Prüfen ob das Spiel schon gestartet ist 
             Reset = False
 
+            'Zeitanzeige zurücksetzen
+            lblSpielzeit.Text = "Spielzeit: 00 : 00"
             Minuten = 0
             Sekunden = 0
 
-            'Geschwindigkeit des Balles in X und Y-Richtung zufällig zwischen 5 und 10 festlegen
-            vxBall = Math.Round(Rnd() * 5 + 5)
-            vyBall = Math.Round(Rnd() * 5 + 5)
+            'Geschwindigkeit des Balles in X- und Y-Richtung
+            'zufällig zwischen 5 und 10 festlegen
+            Dim Zufallsgeschindigkeit As New System.Random
+            vxBall = Zufallsgeschindigkeit.Next(5, 10)
+            vyBall = Zufallsgeschindigkeit.Next(5, 10)
 
             'Objekte auf Standartposition setzen
             setStandartPosition()
@@ -158,6 +165,7 @@ Public Class MainForm
 
     Private Sub ResetToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ResetToolStripMenuItem.Click
         'Beim Klick auf Reset
+
         Reset = True
 
         'Objekte auf Standartposition setzen
@@ -166,7 +174,7 @@ Public Class MainForm
         'Timer stoppen
         Spiel_starten(False)
 
-        'Spielstand zurücksetzen
+        'Spielstand zurücksetzen 
         Computerpunkte = 0
         Spielerpunkte = 0
         lblSpielstand.Text = "0 : 0"
@@ -193,26 +201,26 @@ Public Class MainForm
         Spiel_starten(False)
 
         'Messagebox zeigen und Dialogergebnis in Variable einlesen
-        Dim result As Integer = MessageBox.Show("Willst du das Spiel wirklich beenden?", "Warnung", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+        Dim result As Integer = MessageBox.Show("Willst du das Spiel wirklich beenden?", "Warnung", _
+                                                MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
 
         'Ergebnis des Dialogs vergleichen
         If result = DialogResult.Yes Then 'Ja -> Spiel beenden
             'Programm schließen
             Me.Close()
         ElseIf result = DialogResult.No Then 'Nein -> Spiel nicht beenden
-            'Hauptfenster focusieren und Spiel wieder starten
+            'Hauptfenster focusieren
             Me.Focus()
-            Spiel_starten(True)
         End If
     End Sub
 
     Private Sub PauseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PauseToolStripMenuItem.Click
         'Beim Klick auf Pause
 
-        'Verhindert, dass beim Reset pausiert wird
-        If Not Reset Then
+        If Not Reset Then 'Verhindern, dass beim Reset pausiert wird
+
             'Spiel beim ersten Klick auf Pause anhalten...
-            If ClickCounterPause = 0 Then
+            If ClickCounterPause = 0 And Spiel_läuft Then
                 Spiel_starten(False)
                 lblStop.Show()
                 ClickCounterPause = 1
@@ -222,17 +230,18 @@ Public Class MainForm
                 Spiel_starten(True)
                 ClickCounterPause = 0
             End If
+
         End If
 
     End Sub
 
     Private Sub MainForm_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles Me.KeyPress
-        'Bei beliebigem Tastendruck
+        'Bei beliebigem Tastendruck in der MainForm
 
-        'Verhindert, dass beim Reset pausiert wird
-        If Not Reset Then
+        If Not Reset Then 'Verhindern, dass beim Reset pausiert wird
+
             'Wenn die Taste "Esc" war, Spiel pausieren...
-            If Keys.Escape And ClickCounterPause = 0 Then
+            If Keys.Escape And ClickCounterPause = 0 And Spiel_läuft Then
                 Spiel_starten(False)
                 lblStop.Show()
                 ClickCounterPause = 1
@@ -242,24 +251,35 @@ Public Class MainForm
                 lblStop.Hide()
                 ClickCounterPause = 0
             End If
+
         End If
     End Sub
 
     Private Sub AnleitungToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AnleitungToolStripMenuItem.Click
-        'Beim Klick auf "Wie wird gespielt" Hilfefenster öffnen
-        Anleitung.Show()
-        Anleitung.Focus()
+        Anleitung.Show() 'Anleitungsfenster anzeigen
     End Sub
 
     Private Sub CreditsToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles CreditsToolStripMenuItem.Click
-        Credits.Show()
+        Credits.Show() 'Creditsfenster anzeigen
+    End Sub
+
+    Private Sub HighscoresToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles HighscoresToolStripMenuItem.Click
+        'Beim Klick auf Highscores
+
+        If Not Reset And Spiel_läuft Then 'Verhindern, dass beim Reset pausiert wird
+            'Spiel pausieren
+            Spiel_starten(False)
+            lblStop.Show()
+            ClickCounterPause = 1
+        End If
+
+        Highcores.Show() 'Highscores Fenster anzeigen
     End Sub
 
     Private Sub HilfeToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles HilfeToolStripMenuItem.Click
         'Beim Klick auf Hilfe
 
-        'Verhindert, dass beim Reset pausiert wird
-        If Not Reset Then
+        If Not Reset And Spiel_läuft Then 'Verhindern, dass beim Reset pausiert wird
             'Spiel pausieren
             Spiel_starten(False)
             lblStop.Show()
@@ -271,8 +291,8 @@ Public Class MainForm
     Private Sub EinstellungenToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles EinstellungenToolStripMenuItem.Click
         'Beim Klick auf den Einstellungen-Reiter
 
-        'Verhindert, dass beim Reset pausiert wird
-        If Not Reset Then
+        'Verhindern, dass beim Reset pausiert wird
+        If Not Reset And Spiel_läuft Then
             'Spiel pausieren
             Spiel_starten(False)
             lblStop.Show()
@@ -285,6 +305,8 @@ Public Class MainForm
         SpielBis5ToolStripMenuItem.Checked = False
         SpielBis10ToolStripMenuItem.Checked = False
         FreiesSpielToolStripMenuItem.Checked = True
+
+        ResetToolStripMenuItem.PerformClick() 'Spiel reseten
     End Sub
 
     Private Sub SpielBis3ToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SpielBis3ToolStripMenuItem.Click
@@ -293,7 +315,7 @@ Public Class MainForm
         SpielBis10ToolStripMenuItem.Checked = False
         FreiesSpielToolStripMenuItem.Checked = False
 
-        ResetToolStripMenuItem.PerformClick()
+        ResetToolStripMenuItem.PerformClick() 'Spiel reseten
     End Sub
 
     Private Sub SpielBis5ToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SpielBis5ToolStripMenuItem.Click
@@ -302,7 +324,7 @@ Public Class MainForm
         SpielBis10ToolStripMenuItem.Checked = False
         FreiesSpielToolStripMenuItem.Checked = False
 
-        ResetToolStripMenuItem.PerformClick()
+        ResetToolStripMenuItem.PerformClick() 'Spiel reseten
     End Sub
 
     Private Sub SpielBis10ToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SpielBis10ToolStripMenuItem.Click
@@ -311,7 +333,7 @@ Public Class MainForm
         SpielBis10ToolStripMenuItem.Checked = True
         FreiesSpielToolStripMenuItem.Checked = False
 
-        ResetToolStripMenuItem.PerformClick()
+        ResetToolStripMenuItem.PerformClick() 'Spiel reseten
     End Sub
 
     Private Sub playerTimer_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles playerTimer.Tick
@@ -322,9 +344,10 @@ Public Class MainForm
 
         'Grenzen bestimmen, an die der Spielerbumper gebracht werden kann
         If playerBumper.Top <= 24 Then 'obere Grenze
-            playerBumper.Top = 24
+            playerBumper.Top = 24 'Playerbumper kann nicht weiter als 24px nach oben
         ElseIf playerBumper.Bottom >= höheSpielfeld Then 'untere Grenze
             playerBumper.Top = höheSpielfeld - playerBumper.Height
+            '-> Playerbumper kann nicht weiter nach unten, als das Spielfeld groß ist
         End If
     End Sub
 
@@ -333,22 +356,24 @@ Public Class MainForm
 
         'Steuerung des Computerbumper
         If gameBall.Top <= computerBumper.Top + (computerBumper.Height / 2) Then
-
+            'Wenn der Spielball über dem ComputerBumper ist, dann...
             If Sekunden < 30 Then
-                'bevor 30 Sekunden vergangen sind ist der Computerbumper 
-                'genauso schnell wie der Ball.
+                '... soll, bevor 30 Sekunden vergangen sind, sich der Bumper mit der 
+                'gleichen Geschwindigkeit wie der Ball nach oben bewegen
                 computerBumper.Top -= vyBall
             Else
+                'nach 30 Sekunden nimmt die Y-Geschwindigkeit des ComputerBumpers ab
                 computerBumper.Top -= 20
             End If
 
         ElseIf gameBall.Top >= computerBumper.Top + (computerBumper.Height / 2) Then
-
+            'Wenn der Spielball unter der ComputerBumper-Mitte ist, dann...
             If Sekunden < 30 Then
-                'bevor 30 Sekunden vergangen sind ist der Computerbumper 
-                'genauso schnell wie der Ball.
+                '... soll, bevor 30 Sekunden vergangen sind, sich der Bumper mit der 
+                'gleichen Geschwindiketi wie der Ball nach unten bewgen
                 computerBumper.Top += vyBall
             Else
+                'nach 30 Sekunden nimmt die Y-Geschwindikeit des ComputerBumpers ab
                 computerBumper.Top += 20
             End If
 
@@ -358,18 +383,19 @@ Public Class MainForm
     Private Sub ballTimer_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ballTimer.Tick
         'Wird bei jedem Tick des ballTimer ausgeführt (1ms)
 
-        'Ball zum Start in die invertierte X- bzw. Y-Richtung bewegen (nach links oben)
+        'Ball zum Start in die invertierte X- bzw. Y-Richtung bewegen (d.h. nach links oben)
         gameBall.Top -= vyBall
         gameBall.Left -= vxBall
 
-        'Prüfen ob der Ball an die 2 Bumper stößt
-        If gameBall.Bounds.IntersectsWith(playerBumper.Bounds) Or gameBall.Bounds.IntersectsWith(computerBumper.Bounds) Then
-            vxBall = -vxBall 'X-Geschwindigkeit invertiern
+        'Wenn der Ball an einen der 2 Bumper stößt...
+        If gameBall.Bounds.IntersectsWith(playerBumper.Bounds) _
+            Or gameBall.Bounds.IntersectsWith(computerBumper.Bounds) Then
+            vxBall = -vxBall '...X-Geschwindigkeit des Balls invertiern
         End If
 
-        'Prüfen ob der Ball an die obere bzw untere Spielfeldbegrenzung stößt
+        'Wenn der Ball an die obere bzw. untere Spielfeldbegrenzung stößt...
         If gameBall.Top <= 24 Or gameBall.Bottom >= höheSpielfeld Then
-            vyBall = -vyBall 'Y-Geschwindigkeit invertieren
+            vyBall = -vyBall '...Y-Geschwindigkeit des Balls invertieren
         End If
 
         'Spielstand Label verstecken, wenn der Ball es berührt
@@ -386,22 +412,50 @@ Public Class MainForm
             lblSpielzeit.Visible = True
         End If
 
-        'Prüfen ob der Ball an den rechten Spielfeldrand stößt
+        'Wenn der Ball an den rechten Spielfeldrand stößt:
         If gameBall.Right >= breiteSpielfeld Then
-            'Spieler gewinnt
-            Spiel_starten(False)
-            Spielerpunkte += 1
-            StartToolStripMenuItem.Text = "Weiter..."
-            MessageBox.Show("Du erhälst einen Punkt!", "Super!", MessageBoxButtons.OK, MessageBoxIcon.None)
+            '-> der Spieler gewinnt
+
+            Spiel_starten(False) 'Timer stoppen
+
+            'Bisherige beste Spielzeit mit der jetzigen Spielzeit vergleichen
+            If My.Settings.BesteSpielzeit < Minuten * 60 + Sekunden Then
+                'Wenn jetzige Zeit größer ist als die gespeicherte, wird sie überschrieben
+                My.Settings.BesteSpielzeit = ((Minuten * 60) + Sekunden)
+                My.Settings.Save() 'Änderungen speichern
+            End If
+
+            'Jetzige Spielzeit zur Gesamtspielzeit hinzuzählen
+            My.Settings.Gesamtspielzeit += ((Minuten * 60) + Sekunden)
+            My.Settings.Save() 'Änderungen speichern
+
+            Spielerpunkte += 1 'Spieler erhält einen Punkt
+            StartToolStripMenuItem.Text = "Weiter..." 'Text des Start-Buttons ändern
+            MessageBox.Show("Du erhälst einen Punkt! Du kannst es mit ""Weiter"" nochmal versuchen", _
+                            "Super!", MessageBoxButtons.OK, MessageBoxIcon.None)
         End If
 
-        'Prüfen ob der Ball an den linken Spielfeldrand stößt
+        'Wenn der Ball an den linken Spielfeldrand stößt:
         If gameBall.Left <= 0 Then
-            'Spieler verliert
-            Spiel_starten(False)
-            Computerpunkte += 1
-            StartToolStripMenuItem.Text = "Weiter..."
-            MessageBox.Show("Der Computer erhält einen Punkt!", "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
+            '-> der Spieler verliert
+
+            Spiel_starten(False) 'Timer stoppen
+
+            'Bisherige beste Spielzeit mit der jetzigen Spielzeit vergleichen
+            If My.Settings.BesteSpielzeit < Minuten * 60 + Sekunden Then
+                'Wenn jetzige Zeit größer ist als die gespeicherte, wird sie überschrieben
+                My.Settings.BesteSpielzeit = ((Minuten * 60) + Sekunden)
+                My.Settings.Save() 'Änderungen speichern
+            End If
+
+            'Jetzige Spielzeit zu Gesamtspielzeit hinzuzählen
+            My.Settings.Gesamtspielzeit += ((Minuten * 60) + Sekunden)
+            My.Settings.Save() 'Änderungen speichern
+
+            Computerpunkte += 1 '-> Computer erhält einen Punkt
+            StartToolStripMenuItem.Text = "Weiter..." 'Text des Start-Buttons ändern
+            MessageBox.Show("Der Computer erhält einen Punkt! Du kannst es mit ""Weiter"" nochmal versuchen", _
+                            "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
         End If
 
         'Spielstand anzeigen
@@ -413,55 +467,85 @@ Public Class MainForm
 
     Private Sub Spielergebnis_prüfen()
 
+        'SPIELERGEBNISPRÜFUNG BEIM SPIEL BIS 3
+
         If SpielBis3ToolStripMenuItem.Checked Then
             'Spiel geht bis 3
             If Computerpunkte = 3 Then
-                MessageBox.Show("Leider verloren! Versuchs doch gleich nochmal :)", "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
+
+                'Wert für "Spiele bis 3 verloren" um 1 erhöhen
+                My.Settings.SpieleBis3Verloren += 1
+                My.Settings.Save() 'speichern
+
+                MessageBox.Show("Leider verloren! Versuchs doch gleich nochmal :)", _
+                                "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
                 ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
+
             ElseIf Spielerpunkte = 3 Then
-                MessageBox.Show("Du hast gewonnen!!!", "Super!", MessageBoxButtons.OK, MessageBoxIcon.None)
+
+                'Wert für "Spiele bis 3 gewonnen! um 1 erhöhen 
+                My.Settings.SpieleBis3Gewonnen += 1
+                My.Settings.Save() 'speichern
+
+                MessageBox.Show("Du hast gewonnen!!!", "Super!", _
+                                MessageBoxButtons.OK, MessageBoxIcon.None)
                 ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
             End If
+
         End If
+
+
+        'SPIELERGEBNISPRÜFUNG BEIM SPIEL BIS 5
 
         If SpielBis5ToolStripMenuItem.Checked Then
             'Spiel geht bis 5
             If Computerpunkte = 5 Then
-                MessageBox.Show("Leider verloren! Versuchs doch gleich nochmal :)", "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
+
+                'Wert für Spiele bis 5 verloren um 1 erhöhen
+                My.Settings.SpieleBis3Verloren += 1
+                My.Settings.Save() 'speichern
+
+                MessageBox.Show("Leider verloren! Versuchs doch gleich nochmal :)", _
+                                "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
                 ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
+
             ElseIf Spielerpunkte = 5 Then
-                MessageBox.Show("Du hast gewonnen!!!", "Super!", MessageBoxButtons.OK, MessageBoxIcon.None)
+
+                'Wert für Spiele bis 5 gewonnen um 1 erhöhen
+                My.Settings.SpieleBis5Gewonnen += 1
+                My.Settings.Save() 'speichern
+
+                MessageBox.Show("Du hast gewonnen!!!", "Super!", _
+                                MessageBoxButtons.OK, MessageBoxIcon.None)
                 ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
             End If
         End If
+
+
+        'SPIELERGEBNISPRÜFUNG BEIM SPIEL BIS 10
 
         If SpielBis10ToolStripMenuItem.Checked Then
             'Spiel geht bis 10
             If Computerpunkte = 10 Then
-                MessageBox.Show("Leider verloren! Versuchs doch gleich nochmal :)", "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
+
+                'Wert für Spiele bis 10 verloren um 1 erhöhen
+                My.Settings.SpieleBis3Verloren += 1
+                My.Settings.Save() 'speichern
+
+                MessageBox.Show("Leider verloren! Versuchs doch gleich nochmal :)", _
+                                "Oh man...", MessageBoxButtons.OK, MessageBoxIcon.None)
                 ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
+
             ElseIf Spielerpunkte = 10 Then
-                MessageBox.Show("Du hast gewonnen!!!", "Super!", MessageBoxButtons.OK, MessageBoxIcon.None)
+
+                'Wert für Spiele bis 10 gewonnen um 1 erhöhen
+                My.Settings.SpieleBis10Gewonnen += 1
+                My.Settings.Save() 'speichern
+
+                MessageBox.Show("Du hast gewonnen!!!", "Super!", _
+                                MessageBoxButtons.OK, MessageBoxIcon.None)
                 ResetToolStripMenuItem.PerformClick() 'Spiel zurücksetzen
             End If
-        End If
-
-    End Sub
-
-    Private Sub velocityTimer_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles velocityTimer.Tick
-        'hier ist ein Tick 10 Sekunden lang (10000 ms)
-
-        'alle 10 Sekunden wird die X- und Y-Geschwindigkeit um 5 erhöht
-        If vxBall < 0 Then
-            vxBall -= 5
-        Else
-            vxBall += 5
-        End If
-
-        If vyBall < 0 Then
-            vyBall -= 5
-        Else
-            vyBall += 5
         End If
 
     End Sub
@@ -469,7 +553,6 @@ Public Class MainForm
     Private Sub Spielzeit_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SpielzeitTimer.Tick
         'Hier ist ein Tick 1s lang (1000 ms)
 
-        'Sekunden zählen hoch
         Sekunden += 1
 
         'Minutenumsprung
@@ -478,13 +561,39 @@ Public Class MainForm
             Minuten = 1
         End If
 
-        'Label Ausgabe richtig formatieren
-        'davon ausgegangen, dass niemand mehr als 9 Minuten am Stück spielt
+        'Label Ausgabe für die Spielzeit formatieren
+        'Angenommen "Minuten" bleibt immer einstellig, da keine Runde
+        'über 9 Minuten dauern kann.
         If Sekunden < 10 Then
             lblSpielzeit.Text = "Spielzeit: " & "0" & Minuten & " : " & "0" & Sekunden
         Else
             lblSpielzeit.Text = "Spielzeit: " & "0" & Minuten & " : " & Sekunden
         End If
+
+
+        'GESCHWINDIGKEITSREGELUNG DES BALLS
+
+        For i As Integer = 0 To 60 Step 10
+            If Sekunden = i Then
+                'Wenn 10,20,30,40,50,60 Sekunden vorbeigegangen sind, wird jeweils
+                'die X- und Y-Geschwindigkeit des Balls um den Betrag 5 erhöht
+
+                'X-Geschwindigkeit erhöhen
+                If vxBall < 0 Then
+                    vxBall -= 5
+                Else
+                    vxBall += 5
+                End If
+
+                'Y-Geschwindikeit erhöhen
+                If vyBall < 0 Then
+                    vyBall -= 5
+                Else
+                    vyBall += 5
+                End If
+            End If
+        Next
+
     End Sub
 
 End Class

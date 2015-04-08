@@ -42,3 +42,5 @@ C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pon
 C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.Welcome.resources
 C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.vbproj.GenerateResource.Cache
 C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.Anleitung.resources
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\bin\Debug\Pong.exe.config
+C:\Users\Lukas\Documents\Visual Studio 2010\Projects\Visual Studio 2010\Pong\Pong\obj\x86\Debug\Pong.Highcores.resources

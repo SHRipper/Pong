@@ -106,6 +106,12 @@
     <Compile Include="Credits.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Highcores.Designer.vb">
+      <DependentUpon>Highcores.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Highcores.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -142,6 +148,9 @@
     <EmbeddedResource Include="Credits.resx">
       <DependentUpon>Credits.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Highcores.resx">
+      <DependentUpon>Highcores.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -156,6 +165,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
@@ -169,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />
+    <None Include="Resources\Highscores_Hintergrund.jpg" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

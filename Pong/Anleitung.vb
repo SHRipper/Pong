@@ -1,16 +1,21 @@
 ﻿Public Class Anleitung
 
-    'Tree View Nodes deklarieren
+    'Tree View Nodes
     Dim RootAnleitung As TreeNode
     Dim NodeAllgemein As TreeNode
     Dim NodeEinstellungen As TreeNode
     Dim NodeSpielstart As TreeNode
+    Dim NodeHighscores As TreeNode
 
+    'Stringvariablen für den Text in der Textbox
     Dim AnleitungAllgemein As String
     Dim AnleitungEinstellungen As String
     Dim AnleitungSpielstart As String
+    Dim AnleitungHighscores As String
 
     Private Sub Anleitung_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+
+        'Die Stringvariablen mit dem Hilfetext füllen, der in der Textbox angezeigt werden soll:
 
         AnleitungAllgemein = _
         "ANLEITUNG ZUM SPIEL PONG:" & vbCrLf & vbCrLf & vbCrLf & _
@@ -19,7 +24,7 @@
         "Du musst versuchen den Ball mit deinem Bumper abzuwehren, indem " & _
         "du ihn in die Flugbahn des Balles bewegst. Dein Computergegner wird " & _
         "das selbe tun." & vbCrLf & vbCrLf & _
-        "Wenn du es schaffst den Ball am gegnerischen Bumper vorbeizuschlagen," & _
+        "Wenn du es schaffst den Ball am gegnerischen Bumper vorbeizuschlagen, " & _
         "hast du gewonnen."
 
         AnleitungSpielstart = _
@@ -37,17 +42,22 @@
         "- Wählst du ""Spiel bis 3/5/10"" gibt es ein Punktelimit von 3/5/10 Punkten. Wer als erster " & _
         "diese Punktzahl erreicht ist der Sieger."
 
-        'Tree View Ansicht erstellen
+        AnleitungHighscores = _
+            "FUNKTIONEN DES HIGHSCORES-REITERS:" & vbCrLf & vbCrLf & vbCrLf & _
+        "Hier kannst du verschiedene Erungenschaften betrachten:" & vbCrLf & vbCrLf & _
+        "Du siehst, wie viele Spiele du in den verschiedenen Spielmodi gewonnen bzw. verloren hast." & vbCrLf & _
+        "Außerdem kannst du betrachten, wie viel Zeit du insgesamt im Spiel verbracht hast " & _
+        "und die längste Zeit, in der du eine Runde gegen den Computer gespielt hast "
+
+        'Tree View Hirarchie erstellen
         RootAnleitung = tvÜbersicht.Nodes.Add("Anleitung")
         NodeAllgemein = RootAnleitung.Nodes.Add("Allgemein")
         NodeEinstellungen = RootAnleitung.Nodes.Add("Einstellungen")
         NodeSpielstart = RootAnleitung.Nodes.Add("Spielstart")
+        NodeHighscores = RootAnleitung.Nodes.Add("Highscores")
 
         'Tree View aufklappen
         tvÜbersicht.ExpandAll()
-
-
-
 
     End Sub
 
@@ -59,6 +69,8 @@
             tbAnleitung.Text = AnleitungEinstellungen
         ElseIf tvÜbersicht.SelectedNode Is NodeSpielstart Then
             tbAnleitung.Text = AnleitungSpielstart
+        ElseIf tvÜbersicht.SelectedNode Is NodeHighscores Then
+            tbAnleitung.Text = AnleitungHighscores
         End If
     End Sub
 End Class

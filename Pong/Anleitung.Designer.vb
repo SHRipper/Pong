@@ -29,6 +29,7 @@ Partial Class Anleitung
         '
         'tvÜbersicht
         '
+        Me.tvÜbersicht.Font = New System.Drawing.Font("Trebuchet MS", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tvÜbersicht.Location = New System.Drawing.Point(12, 12)
         Me.tvÜbersicht.Name = "tvÜbersicht"
         Me.tvÜbersicht.Size = New System.Drawing.Size(138, 215)
@@ -37,7 +38,7 @@ Partial Class Anleitung
         'tbAnleitung
         '
         Me.tbAnleitung.BackColor = System.Drawing.SystemColors.ButtonHighlight
-        Me.tbAnleitung.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbAnleitung.Font = New System.Drawing.Font("Trebuchet MS", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tbAnleitung.Location = New System.Drawing.Point(157, 13)
         Me.tbAnleitung.Multiline = True
         Me.tbAnleitung.Name = "tbAnleitung"
@@ -50,10 +51,13 @@ Partial Class Anleitung
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.SystemColors.ActiveCaption
         Me.ClientSize = New System.Drawing.Size(540, 416)
         Me.Controls.Add(Me.tbAnleitung)
         Me.Controls.Add(Me.tvÜbersicht)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MaximizeBox = False
         Me.Name = "Anleitung"
         Me.Text = "Anleitung"
         Me.ResumeLayout(False)
