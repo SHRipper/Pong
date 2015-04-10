@@ -30,9 +30,9 @@ Partial Class Anleitung
         'tvÜbersicht
         '
         Me.tvÜbersicht.Font = New System.Drawing.Font("Trebuchet MS", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tvÜbersicht.Location = New System.Drawing.Point(12, 12)
+        Me.tvÜbersicht.Location = New System.Drawing.Point(6, 12)
         Me.tvÜbersicht.Name = "tvÜbersicht"
-        Me.tvÜbersicht.Size = New System.Drawing.Size(138, 215)
+        Me.tvÜbersicht.Size = New System.Drawing.Size(144, 215)
         Me.tvÜbersicht.TabIndex = 0
         '
         'tbAnleitung

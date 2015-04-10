@@ -54,8 +54,8 @@ Public Class MainForm
         Spiel_starten(False)
 
         'Spielfeldabmessungen festlegen
-        höheSpielfeld = Me.Height - 40
-        breiteSpielfeld = Me.Width - 20
+        höheSpielfeld = Me.Height - MenuStrip.Height
+        breiteSpielfeld = Me.Width - 20 '-20 wegen den Rändern der Form
 
         'Punkte für die Standart Position der Objekte festlegen
         standartBallLocation = New Point(breiteSpielfeld / 2, höheSpielfeld / 2)
@@ -91,7 +91,6 @@ Public Class MainForm
         SpielBis10ToolStripMenuItem.Checked = False
         SpielBis5ToolStripMenuItem.Checked = False
         FreiesSpielToolStripMenuItem.Checked = True
-
 
     End Sub
 
@@ -340,11 +339,11 @@ Public Class MainForm
         'Wird bei jedem Tick des playerTimer ausgeführt (1ms)
 
         'Verändern der Position des Spielerbumpers mit der Maus
-        playerBumper.Top = MousePosition.Y - 250
+        playerBumper.Top = MousePosition.Y - 120
 
         'Grenzen bestimmen, an die der Spielerbumper gebracht werden kann
-        If playerBumper.Top <= 24 Then 'obere Grenze
-            playerBumper.Top = 24 'Playerbumper kann nicht weiter als 24px nach oben
+        If playerBumper.Top <= MenuStrip.Height Then 'obere Grenze
+            playerBumper.Top = MenuStrip.Height 'Playerbumper kann nicht weiter als 24px nach oben
         ElseIf playerBumper.Bottom >= höheSpielfeld Then 'untere Grenze
             playerBumper.Top = höheSpielfeld - playerBumper.Height
             '-> Playerbumper kann nicht weiter nach unten, als das Spielfeld groß ist
@@ -383,9 +382,15 @@ Public Class MainForm
     Private Sub ballTimer_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ballTimer.Tick
         'Wird bei jedem Tick des ballTimer ausgeführt (1ms)
 
-        'Ball zum Start in die invertierte X- bzw. Y-Richtung bewegen (d.h. nach links oben)
+        'X- und Y-Koordinate des Balls die Geschwindigkeit in X- und Y- Richtung abziehen
+        '(d.h. Bewegung nach links oben)
         gameBall.Top -= vyBall
         gameBall.Left -= vxBall
+
+
+
+        'BALLSTEUERUNG UND REFLEXION AN GRENZEN
+
 
         'Wenn der Ball an einen der 2 Bumper stößt...
         If gameBall.Bounds.IntersectsWith(playerBumper.Bounds) _
@@ -394,22 +399,8 @@ Public Class MainForm
         End If
 
         'Wenn der Ball an die obere bzw. untere Spielfeldbegrenzung stößt...
-        If gameBall.Top <= 24 Or gameBall.Bottom >= höheSpielfeld Then
+        If gameBall.Top <= MenuStrip.Height Or gameBall.Bottom >= höheSpielfeld Then
             vyBall = -vyBall '...Y-Geschwindigkeit des Balls invertieren
-        End If
-
-        'Spielstand Label verstecken, wenn der Ball es berührt
-        If gameBall.Bounds.IntersectsWith(lblSpielstand.Bounds) Then
-            lblSpielstand.Visible = False
-        Else
-            lblSpielstand.Visible = True
-        End If
-
-        'Spielzeit Label verstecken, wenn der Ball es berührt
-        If gameBall.Bounds.IntersectsWith(lblSpielzeit.Bounds) Then
-            lblSpielzeit.Visible = False
-        Else
-            lblSpielzeit.Visible = True
         End If
 
         'Wenn der Ball an den rechten Spielfeldrand stößt:
@@ -434,6 +425,12 @@ Public Class MainForm
             MessageBox.Show("Du erhälst einen Punkt! Du kannst es mit ""Weiter"" nochmal versuchen", _
                             "Super!", MessageBoxButtons.OK, MessageBoxIcon.None)
         End If
+
+
+
+
+        'SIEGBEDINGUNGEN (BALL STÖßT AN RECHTE/LINKE SPIELFELDGRENZE)
+
 
         'Wenn der Ball an den linken Spielfeldrand stößt:
         If gameBall.Left <= 0 Then
@@ -463,9 +460,28 @@ Public Class MainForm
 
         Spielergebnis_prüfen()
 
+
+
+        'VERHALTEN VON LABELS BEI KONTAKT MIT BALL
+
+        'Spielstand Label verstecken, wenn der Ball es berührt
+        If gameBall.Bounds.IntersectsWith(lblSpielstand.Bounds) Then
+            lblSpielstand.Visible = False
+        Else
+            lblSpielstand.Visible = True
+        End If
+
+        'Spielzeit Label verstecken, wenn der Ball es berührt
+        If gameBall.Bounds.IntersectsWith(lblSpielzeit.Bounds) Then
+            lblSpielzeit.Visible = False
+        Else
+            lblSpielzeit.Visible = True
+        End If
+
     End Sub
 
     Private Sub Spielergebnis_prüfen()
+
 
         'SPIELERGEBNISPRÜFUNG BEIM SPIEL BIS 3
 
@@ -558,7 +574,7 @@ Public Class MainForm
         'Minutenumsprung
         If Sekunden = 60 Then
             Sekunden = 0
-            Minuten = 1
+            Minuten += 1
         End If
 
         'Label Ausgabe für die Spielzeit formatieren
@@ -573,10 +589,13 @@ Public Class MainForm
 
         'GESCHWINDIGKEITSREGELUNG DES BALLS
 
-        For i As Integer = 0 To 60 Step 10
+        For i As Integer = 0 To 50 Step 10
             If Sekunden = i Then
-                'Wenn 10,20,30,40,50,60 Sekunden vorbeigegangen sind, wird jeweils
+                'Wenn 0,10,20,30,40,50 Sekunden vorbeigegangen sind, wird jeweils
                 'die X- und Y-Geschwindigkeit des Balls um den Betrag 5 erhöht
+                'Die 0 ist beim ersten Durchlauf nicht relevant, da Sekunden schon
+                'hochgezählt wurde. Sie kommt beim Minutenumsprung zum Einsatz,
+                'bei dem Sekunden = 0 ist
 
                 'X-Geschwindigkeit erhöhen
                 If vxBall < 0 Then

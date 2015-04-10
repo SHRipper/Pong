@@ -62,7 +62,7 @@ Partial Class MainForm
         Me.MenuStrip.Name = "MenuStrip"
         Me.MenuStrip.Size = New System.Drawing.Size(1004, 24)
         Me.MenuStrip.TabIndex = 0
-        Me.MenuStrip.Text = "MenuStrip1"
+        Me.MenuStrip.Text = "MenuStrip"
         '
         'SpielToolStripMenuItem
         '
